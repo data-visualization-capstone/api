@@ -21,6 +21,15 @@ app.use(express.static("public", __dirname + "/public"));
 // Support JSON requests
 app.use(bodyParser.json());
 
+// Global Variables
+global.DV = {};
+global.DV.ENV = process.env.NODE_ENV || 'development';
+global.DV.ENV_DEV = (DV.ENV === 'development') || (DV.ENV === 'local');
+global.DV.ENV_PROD = DV.ENV === 'production';
+
+// Config based on current environment
+global.DV.config = require('./config/config')[DV.ENV];
+
 /*****************************
            ROUTING
  *****************************/
@@ -62,3 +71,4 @@ http.listen(app.get("port"), app.get("ip"), function() {
   console.log("Server up and running.");
   console.log("URL: http://" + app.get("ip") + ":" + app.get("port"));
 });
+
