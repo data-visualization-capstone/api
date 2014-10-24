@@ -30,6 +30,11 @@ global.DV.ENV_PROD = DV.ENV === 'production';
 // Config based on current environment
 global.DV.config = require('./config/config')[DV.ENV];
 
+var mongoose = require('./common.js');
+
+mongoose.dbConnect();
+
+
 /*****************************
            ROUTING
  *****************************/
