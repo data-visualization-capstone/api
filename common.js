@@ -1,58 +1,57 @@
+var mongodb = require('mongodb');
+var url = require('url');
+
+var log = console.log;
+var dbName = global.DV.config.dbName;
+
 exports.dbConnect = function(next) {
-  console.log('dbCollect Called');
-  // mongoose.connect(TL.config.db, function (err) {
-  //   if (!err) {
-  //     TL.logger.info("Connected to DB");
-  //     //runPaymentProcessing();
-  //     next();
-  //   } else {
-  //     TL.logger.error("Failed to connect to DB!");
-  //     throw new Error("Failed to connect to DB!");
-  //   }
-  // });
+  mongodb.Db.connect(global.DV.config.connectURL, function(error, client) {
+    if (error) throw error;
+
+    client.collectionNames(function(error, names){
+      if(error) throw error;
+
+      // output all collection names
+      log("Collections");
+      log("===========");
+
+      var lastCollection = null;
+
+      names.forEach(function(colData){
+        var colName = colData.name.replace(dbName + ".", '')
+        log(colName);
+        lastCollection = colName;
+      });
+
+      var collection = new mongodb.Collection(client, lastCollection);
+      
+      log("\nDocuments in " + lastCollection);
+
+      var documents = collection.find({}, {limit:5});
+
+      // output a count of all documents found
+      documents.count(function(error, count){
+        log("  " + count + " documents(s) found");
+        log("====================");
+
+        // output the first 5 documents
+        documents.toArray(function(error, docs) {
+          if(error) throw error;
+
+          docs.forEach(function(doc){
+            log(doc);
+          });
+
+          // close the connection
+          client.close();
+        });
+      });
+    });
+  });
 }
 
 exports.dbDisconnect = function() {
-  // mongoose.disconnect(function (err) {
-  //   if (err) return TL.logger.error(err);
-  // })
-}
-
-// npm install mongodb
-var mongodb = require('mongodb')
-  , MongoClient = mongodb.MongoClient
- 
-MongoClient.connect(process.env.MONGOHQ_URL, function(err, db) {
-  
-  // operate on the collection named "test"
-  var collection = db.collection('test')
- 
-  // remove all records in collection (if any)
-  console.log('removing documents...')
-
-  collection.remove(function(err, result) {
-    if (err) {
-      return console.error(err)
-    }
-    console.log('collection cleared!')
-    // insert two documents
-    console.log('inserting new documents...')
-    collection.insert([{name: 'tester'}, {name: 'coder'}], function(err, docs) {
-      
-      if (err) {
-        return console.error(err)
-      }
-
-      console.log('just inserted ', docs.length, ' new documents!')
-      
-      collection.find({}).toArray(function(err, docs) {
-        if (err) {
-          return console.error(err)
-        }
-        docs.forEach(function(doc) {
-          console.log('found document: ', doc)
-        })
-      })
-    })
+  mongoose.disconnect(function (err) {
+    if (err) return TL.logger.error(err);
   })
-})
+}
