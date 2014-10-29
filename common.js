@@ -12,6 +12,7 @@ exports.dbConnect = function(next) {
       if(error) throw error;
 
       // output all collection names
+      log("")
       log("Collections");
       log("===========");
 
@@ -25,7 +26,7 @@ exports.dbConnect = function(next) {
 
       var collection = new mongodb.Collection(client, lastCollection);
       
-      log("\nDocuments in " + lastCollection);
+      log("\nDocuments in " + lastCollection );
 
       var documents = collection.find({}, {limit:5});
 

@@ -3,6 +3,8 @@ api
 
 Node.js API for Stored and Retrieving GPS Data.
 
+Running
+===
 Install Node Package Manager (NPM)
 
 Download Dependencies:
@@ -12,3 +14,18 @@ Download Dependencies:
 Start Server
 
 ``` node server.js
+
+Data
+===
+
+Users:
+ - id
+ - 
+
+Location:
+ - id
+ - userId
+ - timestamp
+ - coordX
+ - coordY
+
