@@ -10,10 +10,10 @@ var express = require("express")
 var participants = [];
 
 // Server config
-app.set("ip", "127.0.0.1");              // Set IP
-app.set("port", 8080);                   // Set Port
-app.set("views", __dirname + "/views");  // Set /views folder
-app.set("view engine", "jade");          // Use Jade for HTML parsing
+app.set("host", "danabucci.dyndns.org"); 	  // Set IP
+app.set("port", 8080);                     	  // Set Port
+app.set("views", __dirname + "/views");  	  // Set /views folder
+app.set("view engine", "jade");          	  // Use Jade for HTML parsing
 
 // Specify public folder
 app.use(express.static("public", __dirname + "/public"));
