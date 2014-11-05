@@ -20,7 +20,7 @@ Data
 
 Users:
  - id
- - 
+ - type
 
 Location:
  - id
