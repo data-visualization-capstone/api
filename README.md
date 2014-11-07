@@ -19,13 +19,12 @@ Data
 ===
 
 Users:
- - id
- - 
+ - (String) id
+ - (String) source
 
 Location:
- - id
- - userId
- - timestamp
- - coordX
- - coordY
-
+ - (String) id
+ - (String) userId
+ - (int) timestamp -> epoch time
+ - (String) latitude
+ - (String) longitude
