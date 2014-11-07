@@ -13,6 +13,7 @@ var dbName = global.DV.config.dbName;
 exports.dbConnect = function(next) {
   mongodb.Db.connect(global.DV.config.connectURL, function(error, client) {
     // Throw any error encountered while connecting to the database
+
     if (error) throw error;
     
     client.collectionNames(function(error, names){

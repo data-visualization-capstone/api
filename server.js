@@ -38,7 +38,6 @@ var mongoose = require('./common.js');
 
 mongoose.dbConnect();
 
-
 /*****************************
        Default ROUTING
  *****************************/
@@ -59,6 +58,9 @@ app.get("/test", function(request, response) {
 
 app.get('/user', user.findAll);
 app.get('/user/:id', user.findById);
+app.post('/user', user.addUser);
+app.put('/user/:id', user.updateUser);
+// app.delete('/wines/:id', wine.deleteWine);
 
 // app.post("/message", function(request, response) {
 
