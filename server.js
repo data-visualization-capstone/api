@@ -1,11 +1,17 @@
-console.log("Server Starting...")
 
 // Module dependencies:
 var express = require("express")
   , app = express()                               // Express
   , http = require("http").createServer(app)      // HTTP
   , bodyParser = require("body-parser")           // Body-parser
-  , _ = require("underscore");                    // Underscore.js
+  , _ = require("underscore")                     // Underscore.js
+
+  /***********************************
+           Load Models 
+   ***********************************/
+
+  , user     = require('./routes/user')
+  , location = require('./routes/location')
 
 // Server config
 app.set("host", "danabucci.dyndns.org"); 	  // Set host to Bucci's server
@@ -34,7 +40,7 @@ mongoose.dbConnect();
 
 
 /*****************************
-           ROUTING
+       Default ROUTING
  *****************************/
 
 // Home
@@ -48,26 +54,28 @@ app.get("/test", function(request, response) {
 });
 
 /*****************************
-        API Response
+        API Responses
  *****************************/
 
-app.post("/message", function(request, response) {
-  // Example: $ curl -X POST -H 'Content-Type:application/json' 'http://localhost:8080/message' -d '{"message":"Good News Everyone!"}'
+app.get('/user', user.findAll);
+app.get('/user/:id', user.findById);
 
-  // request = {message : msg, name : name};
-  var message = request.body.message;
+// app.post("/message", function(request, response) {
 
-  // Error Handling
-  if(_.isUndefined(message) || _.isEmpty(message.trim())) {
-    return response.json(400, {error: "Message is invalid"});
-  }
+//   // request = {message : msg, name : name};
+//   var message = request.body.message;
 
-  // We also expect the sender's name with the message
-  var name = request.body.name;
+//   // Error Handling
+//   if(_.isUndefined(message) || _.isEmpty(message.trim())) {
+//     return response.json(400, {error: "Message is invalid"});
+//   }
 
-  // Success
-  response.json(200, {message: "Message received"});
-});
+//   // We also expect the sender's name with the message
+//   var name = request.body.name;
+
+//   // Success
+//   response.json(200, {message: "Message received"});
+// });
 
 // Start HTTP server
 http.listen(app.get("port"), app.get("ip"), function() {

@@ -26,5 +26,5 @@ Location:
  - (String) id
  - (String) userId
  - (int) timestamp -> epoch time
- - (String) latitude
- - (String) longitude
+ - (float) latitude
+ - (float) longitude
