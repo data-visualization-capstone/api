@@ -10,7 +10,7 @@ var express = require("express")
 var participants = [];
 
 // Server config
-app.set("host", "danabucci.dyndns.org"); 	  // Set IP
+app.set("host", "danabucci.dyndns.org"); 	  // Set host to Bucci's server
 app.set("port", 8080);                     	  // Set Port
 app.set("views", __dirname + "/views");  	  // Set /views folder
 app.set("view engine", "jade");          	  // Use Jade for HTML parsing
@@ -74,6 +74,6 @@ app.post("/message", function(request, response) {
 // Start HTTP server
 http.listen(app.get("port"), app.get("ip"), function() {
   console.log("Server up and running.");
-  console.log("URL: http://" + app.get("ip") + ":" + app.get("port"));
+  console.log("URL: http://" + app.get("host") + ":" + app.get("port"));
 });
 
