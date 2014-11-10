@@ -1,11 +1,8 @@
 # Data-Visualization Capstone
-# Node.js API for GPS Data.
-===
-
-Goal:
+###  Node.js API for GPS Data.
 ---
 
-To build a Node.JS RESTful API for storing and retreiving GPS data. 
+A Node.JS RESTful API for storing and retreiving GPS data. 
 
 Running:
 ---
@@ -18,7 +15,9 @@ Running:
 
 3.) Download repository from GitHub
 
-``` $ git clone git@github.com:data-visualization-capstone/api.git
+```javascript
+$ git clone [git@github.com:data-visualization-capstone/api.git](https://github.com/data-visualization-capstone/api)
+```
 
 4.) Install Node Package Manager (NPM)
 
@@ -26,11 +25,15 @@ NPM is used for managing packages and dependenices.
 
 5.) Download Dependencies:
 
-``` $ npm install
+```javascript
+$ npm install
+```
 
 6.) Start Server
 
-``` $ node server.js
+```javascript
+$ node server.js
+```
 
 Testing the API
 ---
@@ -70,7 +73,7 @@ Scotch.io's tutorial on building a RESTful API in Node, Express, and Mongo.
 Additional Sources and Libraries:
 --- 
 
-[William Mora](http://www.williammora.com/)'s (Node.js & Socket.io Tutorial)[http://www.williammora.com/2013/03/nodejs-tutorial-building-chatroom-with.html] & [Github Repo](https://github.com/wmora/nodejs-express-socketio-chatroom)
+[William Mora](http://www.williammora.com/)'s [Node.js & Socket.io Tutorial](http://www.williammora.com/2013/03/nodejs-tutorial-building-chatroom-with.html) & [Github Repo](https://github.com/wmora/nodejs-express-socketio-chatroom)
 
 Node.js
 Express
