@@ -1,6 +1,4 @@
 # Data-Visualization Capstone
-###  Node.js API for GPS Data.
----
 
 A Node.JS RESTful API for storing and retreiving GPS data. 
 
@@ -11,12 +9,14 @@ Running:
 
 2.) Change directory into desired folder:
 
-``` $ cd ~/path/to/folder/api
+```javascript
+$ cd ~/path/to/folder/api
+```
 
 3.) Download repository from GitHub
 
 ```javascript
-$ git clone [git@github.com:data-visualization-capstone/api.git](https://github.com/data-visualization-capstone/api)
+$ git clone git@github.com:data-visualization-capstone/api.git
 ```
 
 4.) Install Node Package Manager (NPM)
