@@ -1,87 +1,117 @@
+// BASE SETUP
+// =============================================================================
 
-// Module dependencies:
-var express = require("express")
-  , app = express()                               // Express
-  , http = require("http").createServer(app)      // HTTP
-  , bodyParser = require("body-parser")           // Body-parser
-  , _ = require("underscore")                     // Underscore.js
+// call the packages we need
+var express    = require('express');
+var bodyParser = require('body-parser');
+var app        = express();
 
-  /***********************************
-           Load Models 
-   ***********************************/
-
-  , user     = require('./routes/user')
-  , location = require('./routes/location')
-
-// Server config
-app.set("host", "danabucci.dyndns.org"); 	  // Set host to Bucci's server
-app.set("port", 8080);                     	// Set Port
-app.set("views", __dirname + "/views");  	  // Set /views folder
-app.set("view engine", "jade");          	  // Use Jade for HTML parsing
-
-// Specify public folder
-app.use(express.static("public", __dirname + "/public"));
-
-// Support JSON requests
+// configure app
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// Global Variables
-global.DV = {};
-global.DV.ENV = process.env.NODE_ENV || 'development';
-global.DV.ENV_EV = (DV.ENV === 'development') || (DV.ENV === 'local');
-global.DV.ENV_PROD = DV.ENV === 'production';
+var port     = process.env.PORT || 8080; // set our port
 
-// Config based on current environment
-global.DV.config = require('./config/config')[DV.ENV];
+var mongoose   = require('mongoose');
+mongoose.connect('mongodb://node:node@novus.modulusmongo.net:27017/Iganiq8o'); // connect to our database
+var Bear     = require('./app/models/bear');
 
-var mongoose = require('./common.js');
+// ROUTES FOR OUR API
+// =============================================================================
 
-mongoose.dbConnect();
+// create our router
+var router = express.Router();
 
-/*****************************
-       Default ROUTING
- *****************************/
-
-// Home
-app.get("/", function(request, response) {
-  	response.render("index");
+// middleware to use for all requests
+router.use(function(req, res, next) {
+	// do logging
+	console.log('Something is happening.');
+	next();
 });
 
-// Test Express -> Return JSON Object
-app.get("/test", function(request, response) {
-  	response.json(200, {message: "express is cool"});
+// test route to make sure everything is working (accessed at GET http://localhost:8080/api)
+router.get('/', function(req, res) {
+	res.json({ message: 'hooray! welcome to our api!' });	
 });
 
-/*****************************
-        API Responses
- *****************************/
+// on routes that end in /bears
+// ----------------------------------------------------
+router.route('/bears')
 
-app.get('/user', user.findAll);
-app.get('/user/:id', user.findById);
-app.post('/user', user.addUser);
-app.put('/user/:id', user.updateUser);
-// app.delete('/wines/:id', wine.deleteWine);
+	// create a bear (accessed at POST http://localhost:8080/bears)
+	.post(function(req, res) {
+		
+		var bear = new Bear();		// create a new instance of the Bear model
+		bear.name = req.body.name;  // set the bears name (comes from the request)
 
-// app.post("/message", function(request, response) {
+		bear.save(function(err) {
+			if (err)
+				res.send(err);
 
-//   // request = {message : msg, name : name};
-//   var message = request.body.message;
+			res.json({ message: 'Bear created!' });
+		});
 
-//   // Error Handling
-//   if(_.isUndefined(message) || _.isEmpty(message.trim())) {
-//     return response.json(400, {error: "Message is invalid"});
-//   }
+		
+	})
 
-//   // We also expect the sender's name with the message
-//   var name = request.body.name;
+	// get all the bears (accessed at GET http://localhost:8080/api/bears)
+	.get(function(req, res) {
+		Bear.find(function(err, bears) {
+			if (err)
+				res.send(err);
 
-//   // Success
-//   response.json(200, {message: "Message received"});
-// });
+			res.json(bears);
+		});
+	});
 
-// Start HTTP server
-http.listen(app.get("port"), app.get("ip"), function() {
-  console.log("Server up and running.");
-  console.log("URL: http://" + app.get("host") + ":" + app.get("port"));
-});
+// on routes that end in /bears/:bear_id
+// ----------------------------------------------------
+router.route('/bears/:bear_id')
 
+	// get the bear with that id
+	.get(function(req, res) {
+		Bear.findById(req.params.bear_id, function(err, bear) {
+			if (err)
+				res.send(err);
+			res.json(bear);
+		});
+	})
+
+	// update the bear with this id
+	.put(function(req, res) {
+		Bear.findById(req.params.bear_id, function(err, bear) {
+
+			if (err)
+				res.send(err);
+
+			bear.name = req.body.name;
+			bear.save(function(err) {
+				if (err)
+					res.send(err);
+
+				res.json({ message: 'Bear updated!' });
+			});
+
+		});
+	})
+
+	// delete the bear with this id
+	.delete(function(req, res) {
+		Bear.remove({
+			_id: req.params.bear_id
+		}, function(err, bear) {
+			if (err)
+				res.send(err);
+
+			res.json({ message: 'Successfully deleted' });
+		});
+	});
+
+
+// REGISTER OUR ROUTES -------------------------------
+app.use('/api', router);
+
+// START THE SERVER
+// =============================================================================
+app.listen(port);
+console.log('Magic happens on port ' + port);

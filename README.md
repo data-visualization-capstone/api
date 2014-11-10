@@ -1,30 +1,18 @@
-api
-===
+# Building a RESTful API in Node and Express
 
-Node.js API for Stored and Retrieving GPS Data.
+Using the new Express 4.0 Router to build an API
 
-Running
-===
-Install Node Package Manager (NPM)
+[Read the tutorial](http://scotch.io/tutorials/javascript/build-a-restful-api-using-node-and-express-4)
 
-Download Dependencies:
+## Requirements
 
-``` npm install
+- Node and npm
 
-Start Server
+## Installation
 
-``` node server.js
+- Clone the repo: `git clone git@github.com:scotch-io/node-api`
+- Install dependencies: `npm install`
+- Start the server: `node server.js`
 
-Data
-===
-
-Users:
- - (String) id
- - (String) source
-
-Location:
- - (String) id
- - (String) userId
- - (int) timestamp -> epoch time
- - (float) latitude
- - (float) longitude
+## Testing the API
+Test your API using [Postman](https://chrome.google.com/webstore/detail/postman-rest-client-packa/fhbjgbiflinjbdggehcddcbncdddomop)

@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+  	"url": "latest",
+  	"mongodb": "latest",
+    "express": "4.6.1",
+    "jade": "1.4.2",
+    "underscore": "1.6.0",
+    "body-parser": "1.4.3"
+  }
+}
