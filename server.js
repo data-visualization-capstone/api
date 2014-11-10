@@ -25,7 +25,6 @@ var mongoose   = require('mongoose');
 mongoose.connect(DV.config.development.connectURL); 
 
 // Database Models
-// var Bear     = require('./app/models/bear');
 var User     = require('./app/models/user');
 var Location = require('./app/models/location');
 
