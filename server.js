@@ -10,22 +10,24 @@ var app        = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-var port     = process.env.PORT || 8080; // set our port
-
-var mongoose   = require('mongoose');
+var port = process.env.PORT || 8080; // set our port
 
 // Project Params (Data Visualization)
+// Prefix with our Acronym for the sake of sanity
 DV = {};
 
 // Store environment-dependent variables
 DV.config = require('./config/config');
 
+
 // connect to our database
+var mongoose   = require('mongoose');
 mongoose.connect(DV.config.development.connectURL); 
 
 // Database Models
-var Bear     = require('./app/models/bear');
+// var Bear     = require('./app/models/bear');
 var User     = require('./app/models/user');
+var Location = require('./app/models/location');
 
 
 /*********************************
@@ -47,79 +49,6 @@ router.use(function(req, res, next) {
 router.get('/', function(req, res) {
 	res.json({ message: 'hooray! welcome to our api!' });	
 });
-
-// on routes that end in /bears
-// ----------------------------------------------------
-router.route('/bears')
-
-	// create a bear (accessed at POST http://localhost:8080/bears)
-	.post(function(req, res) {
-		
-		var bear = new Bear();		// create a new instance of the Bear model
-		bear.name = req.body.name;  // set the bears name (comes from the request)
-
-		bear.save(function(err) {
-			if (err)
-				res.send(err);
-
-			res.json({ message: 'Bear created!' });
-		});
-
-		
-	})
-
-	// get all the bears (accessed at GET http://localhost:8080/api/bears)
-	.get(function(req, res) {
-		Bear.find(function(err, bears) {
-			if (err)
-				res.send(err);
-
-			res.json(bears);
-		});
-	});
-
-// on routes that end in /bears/:bear_id
-// ----------------------------------------------------
-router.route('/bears/:bear_id')
-
-	// get the bear with that id
-	.get(function(req, res) {
-		Bear.findById(req.params.bear_id, function(err, bear) {
-			if (err)
-				res.send(err);
-			res.json(bear);
-		});
-	})
-
-	// update the bear with this id
-	.put(function(req, res) {
-		Bear.findById(req.params.bear_id, function(err, bear) {
-
-			if (err)
-				res.send(err);
-
-			bear.name = req.body.name;
-			bear.save(function(err) {
-				if (err)
-					res.send(err);
-
-				res.json({ message: 'Bear updated!' });
-			});
-
-		});
-	})
-
-	// delete the bear with this id
-	.delete(function(req, res) {
-		Bear.remove({
-			_id: req.params.bear_id
-		}, function(err, bear) {
-			if (err)
-				res.send(err);
-
-			res.json({ message: 'Successfully deleted' });
-		});
-	});
 
 
 // on routes that end in /users
@@ -195,6 +124,79 @@ router.route('/users/:user_id')
 		});
 	});
 
+
+// on routes that end in /locations
+// ----------------------------------------------------
+router.route('/locations')
+
+	// create a location (accessed at POST http://localhost:8080/locations)
+	.post(function(req, res) {
+		
+		var location = new Location();		// create a new instance of the Location model
+		location.name = req.body.name;  // set the locations name (comes from the request)
+
+		location.save(function(err) {
+			if (err)
+				res.send(err);
+
+			res.json({ message: 'Location created!' });
+		});
+
+		
+	})
+
+	// get all the locations (accessed at GET http://localhost:8080/api/locations)
+	.get(function(req, res) {
+		Location.find(function(err, locations) {
+			if (err)
+				res.send(err);
+
+			res.json(locations);
+		});
+	});
+
+// on routes that end in /locations/:location_id
+// ----------------------------------------------------
+router.route('/locations/:location_id')
+
+	// get the location with that id
+	.get(function(req, res) {
+		Location.findById(req.params.location_id, function(err, location) {
+			if (err)
+				res.send(err);
+			res.json(location);
+		});
+	})
+
+	// update the location with this id
+	.put(function(req, res) {
+		Location.findById(req.params.location_id, function(err, location) {
+
+			if (err)
+				res.send(err);
+
+			location.name = req.body.name;
+			location.save(function(err) {
+				if (err)
+					res.send(err);
+
+				res.json({ message: 'Location updated!' });
+			});
+
+		});
+	})
+
+	// delete the location with this id
+	.delete(function(req, res) {
+		Location.remove({
+			_id: req.params.location_id
+		}, function(err, location) {
+			if (err)
+				res.send(err);
+
+			res.json({ message: 'Successfully deleted' });
+		});
+	});
 
 // REGISTER OUR ROUTES -------------------------------
 app.use('/api', router);

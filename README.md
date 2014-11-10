@@ -73,8 +73,7 @@ Scotch.io's tutorial on building a RESTful API in Node, Express, and Mongo.
 Additional Sources and Libraries:
 --- 
 
-[William Mora](http://www.williammora.com/)'s [Node.js & Socket.io Tutorial](http://www.williammora.com/2013/03/nodejs-tutorial-building-chatroom-with.html) & [Github Repo](https://github.com/wmora/nodejs-express-socketio-chatroom)
-
-Node.js
-Express
-Socket.io
+- [William Mora](http://www.williammora.com/)'s [Node.js & Socket.io Tutorial](http://www.williammora.com/2013/03/nodejs-tutorial-building-chatroom-with.html) & [Github Repo](https://github.com/wmora/nodejs-express-socketio-chatroom)
+- Node.js
+- Express
+- Socket.io
