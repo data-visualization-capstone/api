@@ -1,6 +1,7 @@
-# Data-Visualization Capstone
+# Data-Visualization Capstone API
 
-A Node.JS RESTful API for storing and retreiving GPS data. 
+A RESTful backend API for storing and retrieving GPS data for use in location data visualizations.
+MEAN: MongoDB, Express, Angular, Node.js
 
 Running:
 ---
@@ -19,9 +20,9 @@ $ cd ~/path/to/folder/api
 $ git clone git@github.com:data-visualization-capstone/api.git
 ```
 
-4.) Install Node Package Manager (NPM)
+4.) Install Node Package Manager
 
-NPM is used for managing packages and dependenices.
+> Node Package Manager (NPM) is used for managing packages and dependenices.
 
 5.) Download Dependencies:
 
@@ -40,7 +41,7 @@ Testing the API
 
 Test the API using [Postman](https://chrome.google.com/webstore/detail/postman-rest-client-packa/fhbjgbiflinjbdggehcddcbncdddomop)
 
-When the local development server is running, API requests can be send to [localhost:8080/api](localhost:8080/api), for example: [localhost:8080/api/users](localhost:8080/api/users)
+When the local development server is running, API requests can be send to [localhost:8080/api](http://localhost:8080/api), for example: [localhost:8080/api/users](http://localhost:8080/api/users)
 
 Models:
 ---
@@ -62,13 +63,13 @@ Models are the underlying data structure currently supported.
 Forked From: 
 --- 
 
-Scotch.io's tutorial on building a RESTful API in Node, Express, and Mongo.
+Scotch.io's tutorial on building a RESTful API in Node, Express, and Mongo:
 
-[Read the tutorial](http://scotch.io/tutorials/javascript/build-a-restful-api-using-node-and-express-4)
+- [Read the tutorial](http://scotch.io/tutorials/javascript/build-a-restful-api-using-node-and-express-4)
 
-[View the Author's GitHub Project](https://github.com/scotch-io/node-api)
+- [View the Author's GitHub Project](https://github.com/scotch-io/node-api)
 
-[Thank you Chris Sevilleja](http://scotch.io/author/chris)
+- [Thank you Chris Sevilleja](http://scotch.io/author/chris)
 
 Additional Sources and Libraries:
 --- 
@@ -77,3 +78,8 @@ Additional Sources and Libraries:
 - Node.js
 - Express
 - Socket.io
+
+Authors
+---
+- [Alex Johnson](https://github.com/alexjohnson505)
+- [Dana Bucci](https://github.com/danabucci)
