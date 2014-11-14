@@ -112,16 +112,16 @@ router.route('/users/:user_id')
 	})
 
 	// delete the user with this id
-	.delete(function(req, res) {
-		User.remove({
-			_id: req.params.user_id
-		}, function(err, user) {
-			if (err)
-				res.send(err);
+	// .delete(function(req, res) {
+	// 	User.remove({
+	// 		_id: req.params.user_id
+	// 	}, function(err, user) {
+	// 		if (err)
+	// 			res.send(err);
 
-			res.json({ message: 'Successfully deleted' });
-		});
-	});
+	// 		res.json({ message: 'Successfully deleted' });
+	// 	});
+	// });
 
 
 // on routes that end in /locations
@@ -186,16 +186,16 @@ router.route('/locations/:location_id')
 	})
 
 	// delete the location with this id
-	.delete(function(req, res) {
-		Location.remove({
-			_id: req.params.location_id
-		}, function(err, location) {
-			if (err)
-				res.send(err);
+	// .delete(function(req, res) {
+	// 	Location.remove({
+	// 		_id: req.params.location_id
+	// 	}, function(err, location) {
+	// 		if (err)
+	// 			res.send(err);
 
-			res.json({ message: 'Successfully deleted' });
-		});
-	});
+	// 		res.json({ message: 'Successfully deleted' });
+	// 	});
+	// });
 
 // REGISTER OUR ROUTES -------------------------------
 app.use('/api', router);
