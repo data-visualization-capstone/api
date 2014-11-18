@@ -7,7 +7,7 @@ module.exports = function(app) {
 		// Return welcome message for all requests to '/'
 		.all(function(req, res, next) {
 			console.log('Root accessed, sending welcome.');
-			res.json({ message: 'hooray! welcome to our api! This also means deploy.io is working!' });
+			res.json({ message: 'hooray! welcome to our api! This also means deploy.io is working! YEAH!' });
 		})
 
 	// Route for /users
