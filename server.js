@@ -66,3 +66,4 @@ router.get('/', function(req, res) {
 // =============================================================================
 app.listen(port);
 console.log('Magic happens on port ' + port);
+console.log("Testing deploy.io");
