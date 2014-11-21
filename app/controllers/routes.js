@@ -1,3 +1,5 @@
+var _          = require('underscore');
+
 // Make this module available to the server.js file
 module.exports = function(app) {
 
@@ -82,18 +84,39 @@ module.exports = function(app) {
 		.post(function(req, res) {
 
 			var location = new Location();	// create a new instance of the Location model
-			location.name = req.body.name;  // set the locations name (comes from the request)
 
-			location.save(function(err) {
-				if (err) res.send(err);
+			// Set params
+			// TODO: Abstract key checking
 
-				res = setHeaders(res);
-				
-				res.json({ message: 'Location created!' });
-			});
+			console.log("Incoming Req. WHY IS THE REQUEST BODY EMPTY....");
+			console.log(req.body);
+
+			location.name = req.body.name;
+			location.latitude = req.body.latitude;
+			location.longitude = req.body.longitude;
+			location.count = req.body.count;
+			location.date = req.body.date;
+
+			var keys = ['name', 'latitude', 'longitude', 'count', 'date'];
+
+			console.log("Seriously. We should have this info:");
+			console.log(location);	
+
+			verifyKeysExist(location, keys, function(err, obj){
+				if (err) return err;
+
+				location.save(function(err) {
+					if (err) res.send(err);
+
+					res = setHeaders(res);
+
+					res.json({ message: 'Location created!' });
+				});
+			})
 		})
 
-		// get all the locations (accessed at GET http://localhost:8080/api/locations)
+		// get all the locations 
+		// GET http://localhost:8080/api/locations
 		.get(function(req, res) {
 			console.log('Locations list requested.');
 			Location.find(function(err, locations) {
@@ -122,8 +145,7 @@ module.exports = function(app) {
 		// update the location with this id
 		.put(function(req, res) {
 			Location.findById(req.params.location_id, function(err, location) {
-				if (err)
-					res.send(err);
+				if (err) res.send(err);
 				location.name = req.body.name;
 				location.save(function(err) {
 					if (err)
@@ -166,4 +188,24 @@ setHeaders = function(res){
 	res.setHeader('Access-Control-Allow-Credentials', true);
 
 	return res;
-}
+},
+
+// Check if all provided keys exist
+verifyKeysExist = function (object, keys, next) {
+  var missing = missingKeys(object, keys);
+
+  if (missing.length > 0) return next(new Errors.BadRequestError('Missing keys', missing));
+
+  next(null, object);
+};
+
+// Takes an object, and an array of keys (strings)
+missingKeys = function(obj, array) {
+  var missingKeys = []
+  
+  _.each(array, function(key) {
+    if (!(key in obj)) missingKeys.push(key);
+  })
+
+  return missingKeys;
+};
