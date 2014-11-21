@@ -22,8 +22,10 @@ module.exports = function(app) {
 			user.name = req.body.name;  // set the users name (comes from the request)
 
 			user.save(function(err) {
-				if (err)
-					res.send(err);
+				if (err) res.send(err);
+
+				res = setHeaders(res);
+
 				res.json({ message: 'User created!' });
 			});
 		})
@@ -32,8 +34,10 @@ module.exports = function(app) {
 		.get(function(req, res) {
 			console.log('User list requested.');
 			User.find(function(err, users) {
-				if (err)
-					res.send(err);
+				if (err) res.send(err);
+
+				res = setHeaders(res);
+				
 				res.json(users);
 			});
 		});
@@ -45,8 +49,10 @@ module.exports = function(app) {
 		.get(function(req, res) {
 			console.log('User requested by ID.');
 			User.findById(req.params.user_id, function(err, user) {
-				if (err)
-					res.send(err);
+				if (err) res.send(err);
+
+				res = setHeaders(res);
+
 				res.json(user);
 			});
 		})
@@ -54,12 +60,14 @@ module.exports = function(app) {
 		// update the user with this id
 		.put(function(req, res) {
 			User.findById(req.params.user_id, function(err, user) {
-				if (err)
-					res.send(err);
+				if (err) res.send(err);
+
 				user.name = req.body.name;
 				user.save(function(err) {
-					if (err)
-						res.send(err);
+					if (err) res.send(err);
+
+					res = setHeaders(res);
+
 					res.json({ message: 'User updated!' });
 				});
 			});
