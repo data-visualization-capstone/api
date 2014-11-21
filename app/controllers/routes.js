@@ -96,7 +96,7 @@ module.exports = function(app) {
 			// Set params
 			// TODO: Abstract key checking
 
-			console.log("Incoming Req. WHY IS THE REQUEST BODY EMPTY....");
+			console.log("POST to /locations. Body:");
 			console.log(req.body);
 
 			location.name = req.body.name;
@@ -106,9 +106,6 @@ module.exports = function(app) {
 			location.date = req.body.date;
 
 			var keys = ['name', 'latitude', 'longitude', 'count', 'date'];
-
-			console.log("Seriously. We should have this info:");
-			console.log(location);	
 
 			verifyKeysExist(location, keys, function(err, obj){
 				if (err) return err;
