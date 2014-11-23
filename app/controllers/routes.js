@@ -96,7 +96,7 @@ module.exports = function(app) {
 			// Set params
 			// TODO: Abstract key checking
 
-			console.log("Incoming Request.");
+			console.log("POST to /locations. Body:");
 			console.log(req.body);
 
 			location.userID = req.body.userID;
@@ -115,7 +115,7 @@ module.exports = function(app) {
                            location.count,
                            location.date ];
 
-			//console.log("Seriously. We should have this info:");
+
 			console.log(location);	
             res = setHeaders(res);
 
