@@ -96,30 +96,47 @@ module.exports = function(app) {
 			// Set params
 			// TODO: Abstract key checking
 
-			console.log("Incoming Req. WHY IS THE REQUEST BODY EMPTY....");
+			console.log("Incoming Request.");
 			console.log(req.body);
 
-			location.name = req.body.name;
+			location.userID = req.body.userID;
+            location.name = req.body.name;
 			location.latitude = req.body.latitude;
 			location.longitude = req.body.longitude;
 			location.count = req.body.count;
 			location.date = req.body.date;
 
-			var keys = ['name', 'latitude', 'longitude', 'count', 'date'];
+            var keys = ['name', 'latitude', 'longitude', 'count', 'date'];
 
-			console.log("Seriously. We should have this info:");
+			var values = [ location.userID,
+                           location.name,
+                           location.latitude,
+                           location.longitude,
+                           location.count,
+                           location.date ];
+
+			//console.log("Seriously. We should have this info:");
 			console.log(location);	
+            res = setHeaders(res);
 
-			verifyKeysExist(location, keys, function(err, obj){
-				if (err) return err;
-
-				location.save(function(err) {
-					if (err) res.send(err);
-
-					res = setHeaders(res);
-
-					res.json({ message: 'Location created!' });
-				});
+			verifyKeysExist(location, keys, values, function(err, obj){
+                // Check for the missingKeys flag
+				if (err) {
+                    // Send the missing data error
+                    res.send(err);
+                }
+                else {
+                    // Else the data is fine, save it to the database
+				    location.save(function(err) {
+					    if (err) {
+                            res.send(err);
+                        }
+                        else {
+                            console.log("Location created!")
+                            res.json({ message: 'Location created!' });
+                        }
+				    });
+                }
 			})
 		})
 
@@ -129,9 +146,7 @@ module.exports = function(app) {
 			console.log('Locations list requested.');
 			Location.find(function(err, locations) {
 				if (err) res.send(err);
-
 				res = setHeaders(res);
-
 				res.json(locations);
 			});
 		});
@@ -191,29 +206,25 @@ setHeaders = function(res){
 	// Request headers you wish to allow
 	res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
 
-	// Set to true if you need the website to include cookies in the requests sent
-	// to the API (e.g. in case you use sessions)
+    // Set to true if you need the website to include cookies in the requests sent
+    // to the API (e.g. in case you use sessions)
 	res.setHeader('Access-Control-Allow-Credentials', true);
 
 	return res;
 },
 
 // Check if all provided keys exist
-verifyKeysExist = function (object, keys, next) {
-  var missing = missingKeys(object, keys);
-
-  if (missing.length > 0) return next(new Errors.BadRequestError('Missing keys', missing));
-
-  next(null, object);
-};
-
-// Takes an object, and an array of keys (strings)
-missingKeys = function(obj, array) {
-  var missingKeys = []
-  
-  _.each(array, function(key) {
-    if (!(key in obj)) missingKeys.push(key);
-  })
-
-  return missingKeys;
+// (Object to check), (array of strings (keys object has)), (next is call back)
+verifyKeysExist = function (object, keys, values, next) {
+    var missingKeys = null;
+    // For each key/value pair, check if any are null
+    // TODO: Smarten this up, it can't tell us what's missing yet.
+    _.each(values, function(value) {
+        if (value == null) {
+            console.log("Missing data");
+            missingKeys = "Missing data";
+        }
+    })
+    // Call the callback with the missingKeys flag.
+    next(missingKeys, object);
 };

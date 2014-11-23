@@ -39,29 +39,6 @@ Location = require('./app/models/location');
 // Pull the routes from app/controllers/routes.js
 require('./app/controllers/routes')(app);
 
-//////////////////////////////////////////////////////////
-// Old code commented out 11/14/14
-// TODO: remove if not necessary
-/*
-// create our router
-var router = express.Router();
-
-// middleware to use for all requests
-router.use(function(req, res, next) {
-	console.log('Something is happening.');
-	next();
-});
-
-// GET localhost:8080/api
-// test route to make sure everything is working
-
-router.get('/', function(req, res) {
-	res.json({ message: 'hooray! welcome to our api!' });	
-});
-*/
-//////////////////////////////////////////////////////////
-
-
 // START THE SERVER
 // =============================================================================
 app.listen(port);
