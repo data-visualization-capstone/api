@@ -100,26 +100,17 @@ module.exports = function(app) {
 			console.log(req.body);
 
 			location.userID = req.body.userID;
-            location.name = req.body.name;
 			location.latitude = req.body.latitude;
 			location.longitude = req.body.longitude;
-			location.count = req.body.count;
 			location.date = req.body.date;
 
-            var keys = ['name', 'latitude', 'longitude', 'count', 'date'];
-
-			var values = [ location.userID,
-                           location.name,
-                           location.latitude,
-                           location.longitude,
-                           location.count,
-                           location.date ];
-
+            var keys = ['userID', 'latitude', 'longitude', 'date'];
 
 			console.log(location);	
-            res = setHeaders(res);
+            
+			res = setHeaders(res);
 
-			verifyKeysExist(location, keys, values, function(err, obj){
+			verifyKeysExist(location, keys, function(err, obj){
                 // Check for the missingKeys flag
 				if (err) {
                     // Send the missing data error
@@ -215,16 +206,21 @@ setHeaders = function(res){
 
 // Check if all provided keys exist
 // (Object to check), (array of strings (keys object has)), (next is call back)
-verifyKeysExist = function (object, keys, values, next) {
-    var missingKeys = null;
-    // For each key/value pair, check if any are null
-    // TODO: Smarten this up, it can't tell us what's missing yet.
-    _.each(values, function(value) {
-        if (value == null) {
-            console.log("Missing data");
-            missingKeys = "Missing data";
-        }
-    })
-    // Call the callback with the missingKeys flag.
-    next(missingKeys, object);
+verifyKeysExist = function (object, keys, next) {
+  var missing = missingKeys(object, keys);
+
+  if (missing.length > 0) return next(new Errors.BadRequestError('Missing keys', missing));
+
+  next(null, object);
+};
+
+// Takes an object, and an array of keys (strings)
+missingKeys = function(obj, array) {
+  var missingKeys = []
+  
+  _.each(array, function(key) {
+    if (!(key in obj)) missingKeys.push(key);
+  })
+
+  return missingKeys;
 };
