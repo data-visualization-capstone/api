@@ -1,5 +1,6 @@
-var _  = require('underscore');
-var locControl = require('../controllers/location')
+var _           = require('underscore');
+var locControl  = require('../controllers/location')
+var userControl = require('../controllers/user')
 
 // Make this module available to the server.js file
 module.exports = function(app) {
@@ -22,23 +23,34 @@ module.exports = function(app) {
 			var user = new User();		// create a new instance of the User model
 			user.name = req.body.name;  // set the users name (comes from the request)
 
-			user.save(function(err) {
-				if (err) res.send(err);
-
-				res = setHeaders(res);
-
-				res.json({ message: 'User created!', user : user });
-			});
-		})
-
+            res = setHeaders(res);
+            userControl.verifyKeysExist(user, function(err, obj){
+                // Check for an error indicating keys are missing
+                if (err) {
+                    // Send the missing data error
+                    console.log(err);
+                    // TODO: this is not sending the error text, not sure why, the rest seems to be working
+                    res.send(err, 500);
+                }
+                else {
+                    // Else the data is fine, save it to the database
+                    user.save(function(err) {
+                        if (err) {
+                            res.send(err);
+                        }
+                        else {
+                            console.log("\nUser created!")
+                            res.json({ message: 'User created!' , user: user});
+                        }
+                    });
+                }
+            })
+        })              
 		// get all the users (accessed at GET http://localhost:8080/api/users)
 		.get(function(req, res) {
 			console.log('User list requested.');
 			User.find(function(err, users) {
 				if (err) res.send(err);
-
-				res = setHeaders(res);
-				
 				res.json(users);
 			});
 		});
@@ -177,7 +189,7 @@ module.exports = function(app) {
 		// 	});
 		// });
 
-},
+}
 
 // Set 'Access-Control-Allow-Origin' to header
 // TODO: Apply header change to ALL requests
