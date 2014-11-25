@@ -26,7 +26,7 @@ module.exports = function(app) {
 
 				res = setHeaders(res);
 
-				res.json({ message: 'User created!' });
+				res.json({ message: 'User created!', user : user });
 			});
 		})
 
@@ -68,7 +68,7 @@ module.exports = function(app) {
 
 					res = setHeaders(res);
 
-					res.json({ message: 'User updated!' });
+					res.json({ message: 'User updated!', user : user });
 				});
 			});
 		})
@@ -124,7 +124,7 @@ module.exports = function(app) {
                         }
                         else {
                             console.log("\nLocation created!")
-                            res.json({ message: 'Location created!' });
+                            res.json({ message: 'Location created!' , location: location});
                         }
 				    });
                 }
@@ -164,7 +164,7 @@ module.exports = function(app) {
 				location.save(function(err) {
 					if (err)
 						res.send(err);
-					res.json({ message: 'Location updated!' });
+					res.json({ message: 'Location updated!', location : location});
 				});
 			});
 		})
