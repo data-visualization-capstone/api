@@ -8,12 +8,12 @@ var Schema       = mongoose.Schema;
 // };
 
 var LocationSchema   = new Schema({
-	userId: String,
-	date:   Number,
+	userId:    String,
+	date:      Number,
 	latitude:  Number,
 	longitude: Number,
-	count: Number,
-    modified: Number,
+	count:     Number,
+    modified:  Number,
 });
 
 module.exports = mongoose.model('Location', LocationSchema);
