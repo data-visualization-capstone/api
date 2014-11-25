@@ -26,6 +26,5 @@ missingKeys = function(data) {
             missingKeys.push(key);
         }
     })
-    console.log(missingKeys);
     return missingKeys;
 };

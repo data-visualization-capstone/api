@@ -1,6 +1,7 @@
 var _           = require('underscore');
-var locControl  = require('../controllers/location')
-var userControl = require('../controllers/user')
+var locControl  = require('../controllers/location');
+var userControl = require('../controllers/user');
+var moment      = require('moment');
 
 // Make this module available to the server.js file
 module.exports = function(app) {
@@ -22,6 +23,9 @@ module.exports = function(app) {
 			
 			var user = new User();		// create a new instance of the User model
 			user.name = req.body.name;  // set the users name (comes from the request)
+            user.created = moment().unix();
+            user.modified = moment().unix();
+            console.log(user);
 
             res = setHeaders(res);
             userControl.verifyKeysExist(user, function(err, obj){
@@ -30,7 +34,7 @@ module.exports = function(app) {
                     // Send the missing data error
                     console.log(err);
                     // TODO: this is not sending the error text, not sure why, the rest seems to be working
-                    res.send(err, 500);
+                    res.send(500, err.toString());
                 }
                 else {
                     // Else the data is fine, save it to the database
@@ -110,6 +114,8 @@ module.exports = function(app) {
 			location.latitude = req.body.latitude;
 			location.longitude = req.body.longitude;
 			location.date = req.body.date;
+            location.created = moment().unix();
+            location.modified = moment().unix();
 
 			console.log("\n POST to /locations:");
 			console.log(location);
@@ -122,7 +128,7 @@ module.exports = function(app) {
                     // Send the missing data error
                     console.log(err);
                     // TODO: this is not sending the error text, not sure why, the rest seems to be working
-                    res.send(err, 500);
+                    res.send(500, err.toString());
                 }
                 else {
                     // Else the data is fine, save it to the database
