@@ -1,4 +1,4 @@
-var _          = require('underscore');
+var _      = require('underscore');
 
 // Make this module available to the server.js file
 module.exports = function(app) {
