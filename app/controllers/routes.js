@@ -106,9 +106,14 @@ module.exports = function(app) {
 			res = setHeaders(res);
 
 			verifyKeysExist(location, keys, function(err, obj){
+                
                 // Check for the missingKeys flag
 				if (err) {
+
                     // Send the missing data error
+                    console.log("\n Missing Keys:")
+                    console.log(err);
+
                     res.send(err);
                 }
                 else {
