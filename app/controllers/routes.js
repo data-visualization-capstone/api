@@ -98,23 +98,18 @@ module.exports = function(app) {
 			location.longitude = req.body.longitude;
 			location.date = req.body.date;
 
-            var keys = ['userId', 'latitude', 'longitude', 'date'];
-
 			console.log("\n POST to /locations:");
 			console.log(location);
             
 			res = setHeaders(res);
 
-			verifyKeysExist(location, keys, function(err, obj){
-                
-                // Check for the missingKeys flag
+			verifyKeysExist(location, function(err, obj){        
+                // Check for an error indicating keys are missing
 				if (err) {
-
                     // Send the missing data error
-                    console.log("\n Missing Keys:")
                     console.log(err);
-
-                    res.send(err);
+                    // TODO: this is not sending the error text, not sure why, the rest seems to be working
+                    res.send(err, 500);
                 }
                 else {
                     // Else the data is fine, save it to the database
@@ -206,21 +201,48 @@ setHeaders = function(res){
 
 // Check if all provided keys exist
 // (Object to check), (array of strings (keys object has)), (next is call back)
-verifyKeysExist = function (object, keys, next) {
-  var missing = missingKeys(object, keys);
-
-  if (missing.length > 0) return next(new Errors.BadRequestError('Missing keys', missing));
-
-  next(null, object);
+verifyKeysExist = function (object, next) {
+    // Extract the actual location data from the JSON object
+    // TODO: could also add a hand off of the User data to the same function
+    var locData = object._doc;
+    // Hand off the location data to check for missing keys
+    var missing = missingKeys(locData);
+    if (missing.length > 0) {
+        return next(new Error('Missing keys -- ' + missing));
+    }
+    else {
+        next(null, object);
+    }
 };
 
 // Takes an object, and an array of keys (strings)
-missingKeys = function(obj, array) {
-  var missingKeys = []
-  
-  _.each(array, function(key) {
-    if (!(key in obj)) missingKeys.push(key);
-  })
-
-  return missingKeys;
+missingKeys = function(data) {
+    // Array to hold the missing keys
+    var missingKeys = [];
+    // For each key value pair, check if any values are equal to null or ''.
+    _.each(data, function(value, key) {
+        if(value == null || value == '') {
+            // add the missing key to the array
+            missingKeys.push(key);
+        }
+    })
+    console.log(missingKeys);
+    return missingKeys;
 };
+
+
+// TYPE CHECKING STUB:
+// Ignore for now.
+/*
+    _.each(data, function(value, key) {
+        switch(key) {
+            case 'userId':
+                if(badInput(value, 'string')) missingKeys.push(key);
+        }
+    })
+    // Little helper to make sure the value is the right
+    // type and is not null
+    var badInput = function(value, type) {
+        return ((typeof value != type) || (value == null))
+    }
+*/
