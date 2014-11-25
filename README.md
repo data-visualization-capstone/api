@@ -36,6 +36,27 @@ $ npm install
 $ node server.js
 ```
 
+For Local Development:
+___
+
+1.) Install nodemon for watching changes and auto-restarting the server.
+
+```javascript
+$ npm install -g nodemon
+```
+
+> sudo if you have to
+
+2.) Run:
+
+```javascript
+$ nodemon server.js
+```
+
+The local node.js server should now restart when
+it detects changes to the files.
+
+
 Testing the API
 ---
 
