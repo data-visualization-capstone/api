@@ -93,20 +93,15 @@ module.exports = function(app) {
 
 			var location = new Location();	// create a new instance of the Location model
 
-			// Set params
-			// TODO: Abstract key checking
-
-			console.log("POST to /locations. Body:");
-			console.log(req.body);
-
-			location.userID = req.body.userID;
+			location.userId = req.body.userId;
 			location.latitude = req.body.latitude;
 			location.longitude = req.body.longitude;
 			location.date = req.body.date;
 
-            var keys = ['userID', 'latitude', 'longitude', 'date'];
+            var keys = ['userId', 'latitude', 'longitude', 'date'];
 
-			console.log(location);	
+			console.log("\n POST to /locations:");
+			console.log(location);
             
 			res = setHeaders(res);
 
@@ -123,7 +118,7 @@ module.exports = function(app) {
                             res.send(err);
                         }
                         else {
-                            console.log("Location created!")
+                            console.log("\nLocation created!")
                             res.json({ message: 'Location created!' });
                         }
 				    });
@@ -134,7 +129,7 @@ module.exports = function(app) {
 		// get all the locations 
 		// GET http://localhost:8080/api/locations
 		.get(function(req, res) {
-			console.log('Locations list requested.');
+			console.log('\nLocations list requested.');
 			Location.find(function(err, locations) {
 				if (err) res.send(err);
 				res = setHeaders(res);
@@ -148,7 +143,7 @@ module.exports = function(app) {
 
 		// get the location with that id
 		.get(function(req, res) {
-			console.log('Location requested by ID.');
+			console.log('\nLocation requested by ID.');
 			Location.findById(req.params.location_id, function(err, location) {
 				if (err)
 					res.send(err);
