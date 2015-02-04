@@ -28,6 +28,7 @@ module.exports = function(app) {
             console.log(user);
 
             res = setHeaders(res);
+
             userControl.verifyKeysExist(user, function(err, obj){
                 // Check for an error indicating keys are missing
                 if (err) {
@@ -55,6 +56,10 @@ module.exports = function(app) {
             console.log('User list requested.');
             User.find(function(err, users) {
                 if (err) res.send(err);
+
+                res = setHeaders(res);
+
+                
                 res.json(users);
             });
         });
