@@ -201,7 +201,7 @@ module.exports = function(app) {
         //  });
         // });
 
-    app.route('/twitter')
+    app.route('/twitter/:hash')
         .get(function(req, res) {
             console.log('/twitter hit');
 
@@ -209,7 +209,7 @@ module.exports = function(app) {
             var twitter = new Twitter(DV.config.development.twitter);
 
             var params = {
-                q: "#snow",
+                q: "#" + req.params.hash,
                 geocode: "42.350000,-71.060000,2mi",
                 count: 50,
             };
@@ -227,13 +227,14 @@ module.exports = function(app) {
                         userId : val.id,
                         date : val.created_at,
                         message   : val.text,
-                        latitude  : val.coordinates[0],
-                        longitude : val.coordinates[1],
+                        latitude  : val.coordinates.coordinates[0],
+                        longitude : val.coordinates.coordinates[1],
                     })
                 }
 
                 res = setHeaders(res);
                 res.json(acc);
+                // res.json(tweets.statuses[0].coordinates)
 
               }
             });
