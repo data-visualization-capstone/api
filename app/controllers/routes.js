@@ -2,6 +2,7 @@ var _           = require('underscore');
 var locControl  = require('../controllers/location');
 var userControl = require('../controllers/user');
 var moment      = require('moment');
+var Twitter     = require('twitter');
 
 // Make this module available to the server.js file
 module.exports = function(app) {
@@ -199,6 +200,47 @@ module.exports = function(app) {
         //      res.json({ message: 'Successfully deleted' });
         //  });
         // });
+
+    app.route('/twitter')
+        .get(function(req, res) {
+            console.log('/twitter hit');
+
+            // New Twitter Connection
+            var twitter = new Twitter(DV.config.development.twitter);
+
+            var params = {
+                q: "#snow",
+                geocode: "42.350000,-71.060000,2mi",
+                count: 50,
+            };
+
+            twitter.get('search/tweets', params, function(error, tweets, response){
+              if (!error) {
+                // console.log(tweets.statuses)
+
+                var acc = [];
+
+                for (var i in tweets.statuses){
+                    val = tweets.statuses[i];
+
+                    acc.push({
+                        userId : val.id,
+                        date : val.created_at,
+                        message   : val.text,
+                        latitude  : val.coordinates[0],
+                        longitude : val.coordinates[1],
+                    })
+                }
+
+                res = setHeaders(res);
+                res.json(acc);
+
+              }
+            });
+
+
+
+        });
 
 }
 

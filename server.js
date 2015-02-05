@@ -4,7 +4,6 @@
 // Call the packages we need
 var express    = require('express');
 var bodyParser = require('body-parser');
-var Twitter    = require('twitter');
 
 // Launch express
 // TODO: made global for routes.js to see. Potentially refactor, or
@@ -24,11 +23,9 @@ DV = {};
 // Store environment-dependent variables
 DV.config = require('./config/config');
 
-
 // Connect to our database
 var mongoose   = require('mongoose');
 mongoose.connect(DV.config.development.connectURL); 
-
 
 // Database Models
 // TODO: these were made global to allow the routes file to see them,
@@ -44,20 +41,3 @@ require('./app/controllers/routes')(app);
 // =============================================================================
 app.listen(port);
 console.log('Magic happens on port ' + port);
-
-
-// TWITTER 
-var client = new Twitter(DV.config.development.twitter);
-
-var params = {
-	q: "#snow",
-	geocode: "37.781157,-122.398720,1mi",
-	count: 50,
-};
-
-client.get('search/tweets', params, function(error, tweets, response){
-  if (!error) {
-  	console.log(tweets.statuses)
-
-  }
-});
