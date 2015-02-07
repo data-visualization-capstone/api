@@ -154,12 +154,43 @@ module.exports = function(app) {
         // get all the locations 
         // GET http://localhost:8080/api/locations
         .get(function(req, res) {
+            
             console.log('\nLocations list requested.');
-            Location.find(function(err, locations) {
-                if (err) res.send(err);
-                res = setHeaders(res);
-                res.json(locations);
-            });
+
+            // SEARCH BY DATE
+            // If "start" and "end" query params
+            // Example: http://localhost:8080/locations?start=1393985702&end=1393989701
+            if (req.query && req.query.start && req.query.end) {
+                
+                var start = req.query.start;
+                var end = req.query.end;
+
+                // Query database
+                var stream = Location.find({ date : { $gt :  start, $lt : end}}).stream();
+                var acc = [];
+
+                stream.on("data", function(item) {
+                    acc.push(item)
+                });
+
+                stream.on("end", function() {
+                    res = setHeaders(res);
+
+                    if (acc.length < 1){
+                        res.json({message : "Zero Locations Found"});
+                    } else {
+                        res.json({message : "Filtered Locations", locations : acc});    
+                    }
+                });
+            } else {
+                // Fetch All
+                Location.find(function(err, locations) {
+                    if (err) res.send(err);
+                    res = setHeaders(res);
+                    res.json(locations);
+                });
+
+            }
         });
 
     // Route for /locations/:location_id
@@ -170,8 +201,7 @@ module.exports = function(app) {
         .get(function(req, res) {
             console.log('\nLocation requested by ID.');
             Location.findById(req.params.location_id, function(err, location) {
-                if (err)
-                    res.send(err);
+                if (err) res.send(err);
                 res.json(location);
             });
         })
