@@ -4,6 +4,9 @@ var userControl = require('../controllers/user');
 var moment      = require('moment');
 var Twitter     = require('twitter');
 
+// New Twitter Connection
+var twitter = new Twitter(DV.config.development.twitter);
+
 // Make this module available to the server.js file
 module.exports = function(app) {
 
@@ -201,12 +204,11 @@ module.exports = function(app) {
         //  });
         // });
 
-    app.route('/twitter/:hash')
+    app.route('/twitter/search/:hash')
         .get(function(req, res) {
-            console.log('/twitter hit');
+            console.log('twitter search requested');
 
-            // New Twitter Connection
-            var twitter = new Twitter(DV.config.development.twitter);
+            
 
             var params = {
                 q: "#" + req.params.hash,
@@ -242,6 +244,36 @@ module.exports = function(app) {
 
 
         });
+
+    app.route('/twitter/stream/:hash')
+        .get(function(req, res) {
+            console.log('twitter stream requested')
+
+            var params = {
+                track: "#" + req.params.hash,
+                geocode: "42.351252, -71.073808, 4mi",
+            };
+
+            twitter.stream('statuses/filter', params,  function(stream){
+              stream.on('data', function(tweet) {
+                console.log(tweet.text);
+                if(tweet.coordinates != null) {
+                    console.log(tweet.coordinates);
+                }else{
+                    console.log('no location');
+                }
+
+              });
+
+              stream.on('error', function(error) {
+                console.log(error);
+              });
+            });
+        });
+
+}
+
+function stripTweet(){
 
 }
 
