@@ -60,10 +60,7 @@ module.exports = function(app) {
             console.log('User list requested.');
             User.find(function(err, users) {
                 if (err) res.send(err);
-
                 res = setHeaders(res);
-
-                
                 res.json(users);
             });
         });
@@ -254,26 +251,37 @@ module.exports = function(app) {
                 geocode: "42.351252, -71.073808, 4mi",
             };
 
-            twitter.stream('statuses/filter', params,  function(stream){
-              stream.on('data', function(tweet) {
-                console.log(tweet.text);
-                if(tweet.coordinates != null) {
-                    console.log(tweet.coordinates);
-                }else{
-                    console.log('no location');
-                }
+            var tweetEntry = new Location();  // create a new instance of the Location model
 
-              });
+            twitter.stream('statuses/filter', params, function(stream){
+                stream.on('data', function(tweet) {
+                    console.log(tweet.text);
+                    if(tweet.coordinates != null) {
+                        console.log(tweet.coordinates);
+                        tweetEntry.userId       = tweet.user.name;
+                        tweetEntry.latitude     = tweet.coordinates.coordinates[0];
+                        tweetEntry.longitude    = tweet.coordinates.coordinates[1];
+                        tweetEntry.date         = tweet.created_at;
+                    }else{
+                        tweetEntry.userId       = tweet.user.name;
+                        tweetEntry.date         = tweet.created_at;
+                        console.log('no location');
+                    }
+                    tweetEntry.save(function(err) {
+                        if (err) {
+                            console.log(err)
+                            console.log("Error saving tweet!");
+                        }else{
+                            console.log("Tweet saved!")
+                        }
+                    });
+                });
 
-              stream.on('error', function(error) {
-                console.log(error);
-              });
+                stream.on('error', function(error) {
+                    console.log(error);
+                });
             });
         });
-
-}
-
-function stripTweet(){
 
 }
 
