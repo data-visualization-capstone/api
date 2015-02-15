@@ -1,4 +1,5 @@
 var _            = require('underscore');
+var mongoose     = require('mongoose');
 var locControl   = require('../controllers/location');
 var userControl  = require('../controllers/user');
 var tweetControl = require('../controllers/tweet');
