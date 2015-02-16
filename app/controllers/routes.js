@@ -51,18 +51,6 @@ module.exports = function(app) {
             userControl.put(req, res);
         })
 
-        // delete the user with this id
-        // .delete(function(req, res) {
-        //  User.remove({
-        //      _id: req.params.user_id
-        //  }, function(err, user) {
-        //      if (err)
-        //          res.send(err);
-        //      res.json({ message: 'Successfully deleted' });
-        //  });
-        // });
-
-
     // Route for /locations
     // ------------------------------------------------------------------------
     app.route('/locations')
@@ -91,23 +79,13 @@ module.exports = function(app) {
             locControl.put(req, res);
         })
 
-        // delete the location with this id
-        // .delete(function(req, res) {
-        //  Location.remove({
-        //      _id: req.params.location_id
-        //  }, function(err, location) {
-        //      if (err)
-        //          res.send(err);
-
-        //      res.json({ message: 'Successfully deleted' });
-        //  });
-        // });
-
+    // Run a twitter search with the specified hash
     app.route('/twitter/search/:hash')
         .get(function(req, res) {
             tweetControl.getSearch(req, res);
         });
 
+    // Begin a twitter stream to log tweets with the searched hash to the database.
     app.route('/twitter/stream/:hash')
         .get(function(req, res) {
             tweetControl.getStream(req, res);
