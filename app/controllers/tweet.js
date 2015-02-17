@@ -70,9 +70,9 @@ exports.createStream = function(req, res) {
         // 4 mile radius around downtown Boston.
         geocode: "42.351252, -71.073808, 4mi",
     };
-    
+
     res = setHeaders(res);
-    res.json('{Stream created, recording tweets for: ' + req.params.hash + '}');
+    res.json({message: "Stream created, recording tweets for: " + req.params.hash});
     
     // Open a stream with 'statuses' set as the endpoint.
     twitter.stream('statuses/filter', params, function(stream){
