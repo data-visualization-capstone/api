@@ -44,7 +44,7 @@ exports.getStream = function(req, res) {
     console.log('Twitter stream requested')
     // Parameters to restrict the stream results to.
     var params = {
-        track: "#" + req.params.hash,
+        track: '#' + req.params.hash,
         // 4 mile radius around downtown Boston.
         geocode: "42.351252, -71.073808, 4mi",
     };
@@ -52,33 +52,40 @@ exports.getStream = function(req, res) {
     twitter.stream('statuses/filter', params, function(stream){
         // If data received, do the following:
         stream.on('data', function(tweet) {
+            
             console.log(tweet.text);
-            if(tweet.coordinates != null) {
+
+            if(tweet.coordinates) {
+
                 // If there is location data in the tweet,
                 // create a new instance of the Tweet model
                 var tweetEntry = new Tweet();
+
                 // Log the text of the tweet to the console (may switch to Socket.io)
-                console.log(tweet.coordinates.coordinates);
+                console.log(tweet.coordinates);
+
                 // Populate the tweet entry for the database
                 tweetEntry.user         = tweet.user.name;
                 tweetEntry.created_at   = moment(tweet.created_at, "ddd MMMM DD HH:mm:ss Z YYYY").unix();
                 tweetEntry.message      = tweet.message;
-                tweetEntry.latitude     = tweet.coordinates.coordinates[0];
-                tweetEntry.longitude    = tweet.coordinates.coordinates[1];
+                tweetEntry.latitude     = tweet.coordinates.coordinates[1];
+                tweetEntry.longitude    = tweet.coordinates.coordinates[0];
+
                 // Save it to the database
                 tweetEntry.save(function(err) {
                     if (err) {
-                        console.log("Error saving tweet!");
+                        console.log("Error Saving Tweet!");
                         console.log(err);
-                    }else{
-                        console.log("Tweet saved!");
+                    } else {
+                        console.log("Tweet Saved to Database!\n");
                     }
                 });
-            }else{
+            } else {
                 // No location in the tweet, don't save it.
-                console.log('no location, tweet not saved');
+                console.log('No Location Data. Tweet Not Saved.\n');
             }
         });
+
         // If error received, catch any errors and display them.
         stream.on('error', function(error) {
             console.log(error);
