@@ -87,8 +87,13 @@ module.exports = function(app) {
 
     // Begin a twitter stream to log tweets with the searched hash to the database.
     app.route('/twitter/stream/:hash')
+
         .get(function(req, res) {
             tweetControl.getStream(req, res);
+        })
+
+        .post(function(req, res) {
+            tweetControl.createStream(req, res);
         });
 
 }
