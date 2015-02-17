@@ -31,8 +31,11 @@ mongoose.connect(DV.config.development.connectURL);
 // TODO: these were made global to allow the routes file to see them,
 //		 either figure out if this is ok, or move these variables into
 //		 a dedicated global data file.
+
 User     = require('./app/models/user');
 Location = require('./app/models/location');
+Tweet    = require('./app/models/tweet');
+
 
 // Pull the routes from app/controllers/routes.js
 require('./app/controllers/routes')(app);

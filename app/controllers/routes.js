@@ -1,8 +1,11 @@
-var _           = require('underscore');
-var locControl  = require('../controllers/location');
-var userControl = require('../controllers/user');
-var moment      = require('moment');
-var Twitter     = require('twitter');
+var _            = require('underscore');
+var mongoose     = require('mongoose');
+var locControl   = require('../controllers/location');
+var userControl  = require('../controllers/user');
+var tweetControl = require('../controllers/tweet');
+
+// New Twitter Connection
+
 
 // Make this module available to the server.js file
 module.exports = function(app) {
@@ -21,79 +24,31 @@ module.exports = function(app) {
     app.route('/users')
         // create a user (accessed at POST http://localhost:8080/users)
         .post(function(req, res) {
-            
-            var user = new User();      // create a new instance of the User model
-            user.name = req.body.name;  // set the users name (comes from the request)
-            user.created = moment().unix();
-            user.modified = moment().unix();
-            console.log(user);
+            // Forward the req and res to the user controller and call its post function.
+            userControl.post(req, res);
+        })
 
-            res = setHeaders(res);
-
-            userControl.verifyKeysExist(user, function(err, obj){
-                // Check for an error indicating keys are missing
-                if (err) {
-                    // Send the missing data error
-                    console.log(err);
-                    // TODO: this is not sending the error text, not sure why, the rest seems to be working
-                    res.send(500, err.toString());
-                }
-                else {
-                    // Else the data is fine, save it to the database
-                    user.save(function(err) {
-                        if (err) {
-                            res.send(err);
-                        }
-                        else {
-                            console.log("\nUser created!")
-                            res.json({ message: 'User created!' , user: user});
-                        }
-                    });
-                }
-            })
-        })              
         // get all the users (accessed at GET http://localhost:8080/api/users)
         .get(function(req, res) {
-            console.log('User list requested.');
-            User.find(function(err, users) {
-                if (err) res.send(err);
-
-                res = setHeaders(res);
-
-                
-                res.json(users);
-            });
-        });
+            // Forward the req and res to the user controller and call its get function.
+            userControl.get(req, res);
+        })
 
     // Route for /users/:user_id
     // ------------------------------------------------------------------------
     app.route('/users/:user_id')
         // get the user with that id
+        // TODO (2/8/15): this is still broken, returns an 
+        // error about setting headers after they are sent
         .get(function(req, res) {
-            console.log('User requested by ID.');
-            User.findById(req.params.user_id, function(err, user) {
-                if (err) res.send(err);
-
-                res = setHeaders(res);
-
-                res.json(user);
-            });
+            userControl.getUserByID(req, res);
         })
 
         // update the user with this id
+        // TODO (2/8/15): this is still broken, returns an 
+        // error about setting headers after they are sent
         .put(function(req, res) {
-            User.findById(req.params.user_id, function(err, user) {
-                if (err) res.send(err);
-
-                user.name = req.body.name;
-                user.save(function(err) {
-                    if (err) res.send(err);
-
-                    res = setHeaders(res);
-
-                    res.json({ message: 'User updated!', user : user });
-                });
-            });
+            userControl.put(req, res);
         })
 
         // delete the user with this id
@@ -113,84 +68,13 @@ module.exports = function(app) {
     app.route('/locations')
         // create a location (accessed at POST http://localhost:8080/locations)
         .post(function(req, res) {
-
-            var location = new Location();  // create a new instance of the Location model
-
-            location.userId = req.body.userId;
-            location.latitude = req.body.latitude;
-            location.longitude = req.body.longitude;
-            location.date = req.body.date;
-            location.created = moment().unix();
-            location.modified = moment().unix();
-
-            console.log("\n POST to /locations:");
-            console.log(location);
-            
-            res = setHeaders(res);
-
-            locControl.verifyKeysExist(location, function(err, obj){        
-                // Check for an error indicating keys are missing
-                if (err) {
-                    // Send the missing data error
-                    console.log(err);
-                    // TODO: this is not sending the error text, not sure why, the rest seems to be working
-                    res.send(500, err.toString());
-                }
-                else {
-                    // Else the data is fine, save it to the database
-                    location.save(function(err) {
-                        if (err) {
-                            res.send(err);
-                        }
-                        else {
-                            console.log("\nLocation created!")
-                            res.json({ message: 'Location created!' , location: location});
-                        }
-                    });
-                }
-            })
+            locControl.post(req, res);
         })
 
         // get all the locations 
         // GET http://localhost:8080/api/locations
         .get(function(req, res) {
-            
-            console.log('\nLocations list requested.');
-
-            // SEARCH BY DATE
-            // If "start" and "end" query params
-            // Example: http://localhost:8080/locations?start=1393985702&end=1393989701
-            if (req.query && req.query.start && req.query.end) {
-                
-                var start = req.query.start;
-                var end = req.query.end;
-
-                // Query database
-                var stream = Location.find({ date : { $gt :  start, $lt : end}}).stream();
-                var acc = [];
-
-                stream.on("data", function(item) {
-                    acc.push(item)
-                });
-
-                stream.on("end", function() {
-                    res = setHeaders(res);
-
-                    if (acc.length < 1){
-                        res.json({message : "Zero Locations Found"});
-                    } else {
-                        res.json({message : "Filtered Locations", locations : acc});    
-                    }
-                });
-            } else {
-                // Fetch All
-                Location.find(function(err, locations) {
-                    if (err) res.send(err);
-                    res = setHeaders(res);
-                    res.json(locations);
-                });
-
-            }
+            locControl.get(req, res);
         });
 
     // Route for /locations/:location_id
@@ -199,24 +83,12 @@ module.exports = function(app) {
 
         // get the location with that id
         .get(function(req, res) {
-            console.log('\nLocation requested by ID.');
-            Location.findById(req.params.location_id, function(err, location) {
-                if (err) res.send(err);
-                res.json(location);
-            });
+            locControl.getLocByID(req, res);
         })
 
         // update the location with this id
         .put(function(req, res) {
-            Location.findById(req.params.location_id, function(err, location) {
-                if (err) res.send(err);
-                location.name = req.body.name;
-                location.save(function(err) {
-                    if (err)
-                        res.send(err);
-                    res.json({ message: 'Location updated!', location : location});
-                });
-            });
+            locControl.put(req, res);
         })
 
         // delete the location with this id
@@ -231,46 +103,14 @@ module.exports = function(app) {
         //  });
         // });
 
-    app.route('/twitter/:hash')
+    app.route('/twitter/search/:hash')
         .get(function(req, res) {
-            console.log('/twitter hit');
+            tweetControl.getSearch(req, res);
+        });
 
-            // New Twitter Connection
-            var twitter = new Twitter(DV.config.development.twitter);
-
-            var params = {
-                q: "#" + req.params.hash,
-                geocode: "42.350000,-71.060000,2mi",
-                count: 50,
-            };
-
-            twitter.get('search/tweets', params, function(error, tweets, response){
-              if (!error) {
-                // console.log(tweets.statuses)
-
-                var acc = [];
-
-                for (var i in tweets.statuses){
-                    val = tweets.statuses[i];
-
-                    acc.push({
-                        userId : val.id,
-                        date : val.created_at,
-                        message   : val.text,
-                        latitude  : val.coordinates.coordinates[0],
-                        longitude : val.coordinates.coordinates[1],
-                    })
-                }
-
-                res = setHeaders(res);
-                res.json(acc);
-                // res.json(tweets.statuses[0].coordinates)
-
-              }
-            });
-
-
-
+    app.route('/twitter/stream/:hash')
+        .get(function(req, res) {
+            tweetControl.getStream(req, res);
         });
 
 }
