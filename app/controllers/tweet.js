@@ -67,7 +67,7 @@ exports.getStream = function(req, res) {
                 // Populate the tweet entry for the database
                 tweetEntry.user         = tweet.user.name;
                 tweetEntry.created_at   = moment(tweet.created_at, "ddd MMMM DD HH:mm:ss Z YYYY").unix();
-                tweetEntry.message      = tweet.message;
+                tweetEntry.message      = tweet.text;
                 tweetEntry.latitude     = tweet.coordinates.coordinates[1];
                 tweetEntry.longitude    = tweet.coordinates.coordinates[0];
 
