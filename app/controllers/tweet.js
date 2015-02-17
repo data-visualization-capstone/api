@@ -44,21 +44,18 @@ exports.getSearch = function(req, res) {
 // Return results from database
 exports.getStream = function(req, res) {
     console.log('Fetching Cached Twitter Streams\n')
-    
-    var tweetEntry = new Tweet();
-    
+
     // Parameters to restrict the stream results to.
     var params = {
         track: '#' + req.params.hash,
     };
 
-    tweetEntry.find(function(err, tweets) {
+    Tweet.find(function(err, tweets) {
         if (err) res.send(err);
         res = setHeaders(res);
         res.json(tweets);
         console.log('Tweets sent.');
     });
-    
 }
 
 // Create a new twitter stream.
@@ -74,11 +71,13 @@ exports.createStream = function(req, res) {
         geocode: "42.351252, -71.073808, 4mi",
     };
     
+    res = setHeaders(res);
+    res.json('{Stream created, recording tweets for: ' + req.params.hash + '}');
+    
     // Open a stream with 'statuses' set as the endpoint.
     twitter.stream('statuses/filter', params, function(stream){
         // If data received, do the following:
         stream.on('data', function(tweet) {
-            
             console.log(tweet.text);
 
             if(tweet.coordinates) {

@@ -3,7 +3,7 @@ var moment  = require('moment');
 
 // Check if all provided keys exist
 // (Object to check), (array of strings (keys object has)), (next is call back)
-verifyKeysExist = function (object, next) {
+var verifyKeysExist = function (object, next) {
     // Extract the actual location data from the JSON object
     // TODO: could also add a hand off of the User data to the same function
     var locData = object._doc;
@@ -18,7 +18,7 @@ verifyKeysExist = function (object, next) {
 };
 
 // Takes an object, and an array of keys (strings)
-missingKeys = function(data) {
+var missingKeys = function(data) {
     // Array to hold the missing keys
     var missingKeys = [];
     // For each key value pair, check if any values are equal to null or ''.
@@ -67,7 +67,7 @@ exports.post = function(req, res) {
             });
         }
     })
-}
+};
 
 exports.get = function(req, res) {
     console.log('\nLocations list requested.');
@@ -77,7 +77,7 @@ exports.get = function(req, res) {
         res.json(locations);
         console.log('Locations sent.');
     });
-}
+};
 
 exports.getLocByID = function(req, res) {
     console.log('\nLocation requested by ID.');
@@ -86,7 +86,7 @@ exports.getLocByID = function(req, res) {
             res.send(err);
         res.json(location);
     });
-}
+};
 
 exports.put = function(req, res) {
     Location.findById(req.params.location_id, function(err, location) {
@@ -97,4 +97,4 @@ exports.put = function(req, res) {
             res.json({ message: 'Location updated!', location : location});
         });
     });
-}
+};
