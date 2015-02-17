@@ -98,25 +98,3 @@ exports.put = function(req, res) {
         });
     });
 }
-
-
-
-
-
-
-
-// TYPE CHECKING STUB:
-// Ignore for now.
-/*
-    _.each(data, function(value, key) {
-        switch(key) {
-            case 'userId':
-                if(badInput(value, 'string')) missingKeys.push(key);
-        }
-    })
-    // Little helper to make sure the value is the right
-    // type and is not null
-    var badInput = function(value, type) {
-        return ((typeof value != type) || (value == null))
-    }
-*/
