@@ -62,6 +62,8 @@ exports.getStream = function(req, res) {
     // Parameters to restrict the stream results to.
     var params = {
         track: '#' + req.params.hash,
+        lang: "en",
+        geocode: "42.351252, -71.073808, 4mi",
     };
 
     Tweet.find(function(err, tweets) {
