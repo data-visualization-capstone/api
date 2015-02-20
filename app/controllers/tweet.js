@@ -8,10 +8,10 @@ exports.getSearch = function(req, res) {
     console.log('Twitter search requested');
 
     var params = {
-        q: '#' + req.params.hash,
+        q: req.params.hash,
         // 4 mile radius around downtown Boston.
-        geocode: "42.351252, -71.073808, 4mi",
-        count: 50,
+        geocode: "42.351252, -71.073808, 10mi",
+        count: 100,
     };
     // Make a get request to twitter for searches on tweets.
     twitter.get('search/tweets', params, function(error, tweets, response){
