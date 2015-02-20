@@ -98,13 +98,26 @@ module.exports = function(app) {
 
 }
 
+// Check if incoming request is from valid URL
+validClient = function(host){
+
+    // Check domains that our API will respond to
+    // http://www.w3.org/TR/cors/#access-control-allow-origin-response-hea
+    return _.contains(DV.config.development.valid_client_domains, host);
+}
+
 // Set 'Access-Control-Allow-Origin' to header
-// TODO: Apply header change to ALL requests
 // http://stackoverflow.com/questions/18310394/no-access-control-allow-origin-node-apache-port-issue
 setHeaders = function(res){
 
+    // Get source of incoming request.
+    var client = res.req.headers.host;
+
+    // Don't set CORS headers if client URL is declined
+    if (!validClient(client)){ return; };
+
     // Website you wish to allow to connect
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost');
+    res.setHeader('Access-Control-Allow-Origin', client);
 
     // Request methods you wish to allow
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
