@@ -10,19 +10,33 @@ exports.getSearch = function(req, res) {
     var params = {
         q: req.params.hash,
         // 4 mile radius around downtown Boston.
-        geocode: "42.351252, -71.073808, 10mi",
+        geocode: "42.351252, -71.073808, 4mi",
         count: 100,
+        lang: "en",
     };
+
     // Make a get request to twitter for searches on tweets.
     twitter.get('search/tweets', params, function(error, tweets, response){
+        // console.log(tweets)
+
         if (!error) {
             // Declare an entry for the array
             var acc = [];
+
+            console.log("\n" + tweets.statuses.length + " Tweets Found")
+
             // For each part of the tweet, extract the data we need.
             for (var i in tweets.statuses){
+
                 val = tweets.statuses[i];
+
+                
                 // Only display if there is a locaiton attached.
+
                 if(val.coordinates){
+
+                    console.log(val.text)
+
                     acc.push({
                         user       : val.id,
                         created_at : val.created_at,
