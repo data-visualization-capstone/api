@@ -111,10 +111,16 @@ validClient = function(host){
 setHeaders = function(res){
 
     // Get source of incoming request.
-    var client = res.req.headers.host;
-
+    var client = res.req.headers.origin;
+    
+    // console.log("Request from " + client + ". Checking supported CORS domains...")
     // Don't set CORS headers if client URL is declined
-    if (!validClient(client)){ return; };
+    if (!validClient(client)){ 
+
+        // If invalid client, lets set
+        // our allowed client to our website.
+        client = "vent8225.dyndns.org";
+    };
 
     // Website you wish to allow to connect
     res.setHeader('Access-Control-Allow-Origin', client);
