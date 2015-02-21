@@ -23,20 +23,14 @@ exports.getSearch = function(req, res) {
             // Declare an entry for the array
             var acc = [];
 
-            console.log("\n" + tweets.statuses.length + " Tweets Found")
+            console.log(tweets.statuses.length + " Tweets found for: " + req.params.hash);
 
             // For each part of the tweet, extract the data we need.
             for (var i in tweets.statuses){
-
                 val = tweets.statuses[i];
-
-                
                 // Only display if there is a locaiton attached.
-
                 if(val.coordinates){
-
-                    console.log(val.text)
-
+                    //console.log(val.text)
                     acc.push({
                         user       : val.id,
                         created_at : val.created_at,
@@ -66,8 +60,12 @@ exports.getStream = function(req, res) {
         geocode: "42.351252, -71.073808, 4mi",
     };
 
-    Tweet.find(function(err, tweets) {
-        if (err) res.send(err);
+    // Query the database for tweets with a message containing the searched hash.
+    var query = Tweet.where('message').regex(req.params.hash);
+
+    // Execute the query and send the results to the browser.
+    query.exec(function(err, tweets) {
+        if (err) console.log(err);
         res = setHeaders(res);
         res.json(tweets);
         console.log('Tweets sent.');
