@@ -99,6 +99,10 @@ module.exports = function(app) {
 
     app.route('/database')
 
+        .get(function(req, res){
+            dbControl.get(req, res);
+        })
+
         .post(function(req, res) {
             dbControl.post(req, res);
         });

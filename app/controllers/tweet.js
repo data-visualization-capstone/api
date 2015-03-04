@@ -32,6 +32,7 @@ exports.getSearch = function(req, res) {
                 if(val.coordinates){
                     //console.log(val.text)
                     acc.push({
+                        type       : 'tweet',
                         user       : val.id,
                         created_at : val.created_at,
                         message    : val.text,
@@ -104,6 +105,7 @@ exports.createStream = function(req, res) {
                 console.log(tweet.coordinates);
 
                 // Populate the tweet entry for the database
+                tweetEntry.type         = 'tweet'
                 tweetEntry.user         = tweet.user.name;
                 tweetEntry.created_at   = moment(tweet.created_at, "ddd MMMM DD HH:mm:ss Z YYYY").unix();
                 tweetEntry.message      = tweet.text;

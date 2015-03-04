@@ -33,6 +33,7 @@ missingKeys = function(data) {
 exports.post = function(req, res) {          
     var user = new User();      // create a new instance of the User model
     
+    user.type = 'user';
     user.name = req.body.name;  // set the users name (comes from the request)
     user.created = moment().unix();
     user.modified = moment().unix();

@@ -8,7 +8,8 @@ var Schema       = mongoose.Schema;
 // };
 
 var LocationSchema   = new Schema({
-	userId:    String,
+	type:      String,
+    userId:    String,
 	date:      Number,
 	latitude:  Number,
 	longitude: Number,
