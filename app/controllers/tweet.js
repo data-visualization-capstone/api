@@ -29,7 +29,6 @@ exports.getSearch = function(req, res) {
             for (var i in tweets.statuses){
 
                 val = tweets.statuses[i];
-
                 
                 // Only display if there is a locaiton attached.
 
