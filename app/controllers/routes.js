@@ -3,6 +3,7 @@ var mongoose     = require('mongoose');
 var locControl   = require('../controllers/location');
 var userControl  = require('../controllers/user');
 var tweetControl = require('../controllers/tweet');
+var dbControl    = require('../controllers/database');
 
 // New Twitter Connection
 
@@ -94,6 +95,16 @@ module.exports = function(app) {
 
         .post(function(req, res) {
             tweetControl.createStream(req, res);
+        });
+
+    app.route('/database')
+
+        .get(function(req, res){
+            dbControl.get(req, res);
+        })
+
+        .post(function(req, res) {
+            dbControl.post(req, res);
         });
 
 }

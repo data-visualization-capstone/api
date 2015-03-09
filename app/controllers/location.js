@@ -34,12 +34,13 @@ var missingKeys = function(data) {
 exports.post = function(req, res) {
     var location = new Location();  // create a new instance of the Location model
 
-    location.userId = req.body.userId;
-    location.latitude = req.body.latitude;
-    location.longitude = req.body.longitude;
-    location.date = req.body.date;
-    location.created = moment().unix();
-    location.modified = moment().unix();
+    location.type       = 'location'
+    location.userId     = req.body.userId;
+    location.latitude   = req.body.latitude;
+    location.longitude  = req.body.longitude;
+    location.date       = req.body.date;
+    location.created    = moment().unix();
+    location.modified   = moment().unix();
 
     console.log("\n POST to /locations:");
     console.log(location);
