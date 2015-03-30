@@ -1,7 +1,6 @@
 var _            = require('underscore');
 var mongoose     = require('mongoose');
 var locControl   = require('../controllers/location');
-var userControl  = require('../controllers/user');
 var tweetControl = require('../controllers/tweet');
 var dbControl    = require('../controllers/database');
 
@@ -20,38 +19,6 @@ module.exports = function(app) {
             res.json({ message: 'hooray! welcome to our api!' });
         })
 
-    // Route for /users
-    // ------------------------------------------------------------------------
-    app.route('/users')
-        // create a user (accessed at POST http://localhost:8080/users)
-        .post(function(req, res) {
-            // Forward the req and res to the user controller and call its post function.
-            userControl.post(req, res);
-        })
-
-        // get all the users (accessed at GET http://localhost:8080/api/users)
-        .get(function(req, res) {
-            // Forward the req and res to the user controller and call its get function.
-            userControl.get(req, res);
-        })
-
-    // Route for /users/:user_id
-    // ------------------------------------------------------------------------
-    app.route('/users/:user_id')
-        // get the user with that id
-        // TODO (2/8/15): this is still broken, returns an 
-        // error about setting headers after they are sent
-        .get(function(req, res) {
-            userControl.getUserByID(req, res);
-        })
-
-        // update the user with this id
-        // TODO (2/8/15): this is still broken, returns an 
-        // error about setting headers after they are sent
-        .put(function(req, res) {
-            userControl.put(req, res);
-        })
-
     // Route for /locations
     // ------------------------------------------------------------------------
     app.route('/locations')
@@ -60,7 +27,7 @@ module.exports = function(app) {
             locControl.post(req, res);
         })
 
-        // get all the locations 
+        // get all the locations
         // GET http://localhost:8080/api/locations
         .get(function(req, res) {
             locControl.get(req, res);
@@ -123,10 +90,10 @@ setHeaders = function(res){
 
     // Get source of incoming request.
     var client = res.req.headers.origin;
-    
+
     // console.log("Request from " + client + ". Checking supported CORS domains...")
     // Don't set CORS headers if client URL is declined
-    if (!validClient(client)){ 
+    if (!validClient(client)){
 
         // If invalid client, lets set
         // our allowed client to our website.

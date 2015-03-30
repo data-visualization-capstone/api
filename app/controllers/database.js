@@ -18,7 +18,7 @@ exports.post = function(req, res){
 
 	// Initialize an empty response to fill below.
 	// Note: this is basically a JSON object used as a pointer, so the helper functions below
-	// can fill in the correct query to be executed by Mongoose.
+	// can fill in the correct query to be executed by Mongoose within this function.
 	var response = {res: null};
 
 	// Set headers correctly
@@ -46,8 +46,11 @@ exports.post = function(req, res){
 
 	// Set headers and send back the requested type
 	// res = setHeaders(res);
-	if(response == {}) {
-		res.json({ message: 'Request received, type was ' + type , type: type});
+	if(response.res == null) {
+		res.json({ message: "Request contains error, type was '" + type +
+							"' and query param was '" + query.param + "'",
+				   type: type ,
+				   param: query.param});
 	}else{
 		//Execute the above mongoose query on the database
 		response.res.exec(function(err, obj) {
@@ -70,7 +73,7 @@ var queryLocation = function(query, response){
 
 	switch(queryParam) {
 		case 'all' :
-			// WARNING: this will probably crash postman, use with caution.
+			// WARNING: this will probably crash Postman, use with caution.
 			response.res = Location.find();
 			break;
 		case 'daterange' :
@@ -98,13 +101,13 @@ var queryTweet = function(query, response) {
 
 	switch(queryParam) {
 		case 'all' :
-			// WARNING: this will probably crash postman, use with caution.
+			// WARNING: this will probably crash Postman, use with caution.
 			response.res = Tweet.find();
 			break;
 		case 'daterange' :
 			// if dateRange, extract the range and perform 'where' query with it.
 			var lo = parseInt(query.low);  // JSON parameters are not always ints, ensure that they are.
-			var hi = parseInt(query.high); // JSON parameters are not always ints, ensure that they are.
+			var hi = parseInt(query.high);
 			response.res = Tweet.where('created_at').gt(lo).lt(hi);
 			break;
 		case 'keyword' :

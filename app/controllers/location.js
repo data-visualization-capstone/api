@@ -44,10 +44,10 @@ exports.post = function(req, res) {
 
     console.log("\n POST to /locations:");
     console.log(location);
-    
+
     res = setHeaders(res);
 
-    verifyKeysExist(location, function(err, obj){        
+    verifyKeysExist(location, function(err, obj){
         // Check for an error indicating keys are missing
         if (err) {
             // Send the missing data error
