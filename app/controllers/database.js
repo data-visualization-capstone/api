@@ -2,6 +2,12 @@ var _            = require('underscore');
 var moment       = require('moment');
 var mongoose     = require('mongoose');
 
+exports.get = function(req, res){
+	console.log('GET request to database endpoint')
+	res = setHeaders(res);
+	res.json({ message: 'Welcome to the database endpoint!' });
+}
+
 // Main database query function
 exports.post = function(req, res){
 	console.log('Database query received');
@@ -9,28 +15,27 @@ exports.post = function(req, res){
 	// Extract the type of request from the body
 	var query = req.body
 	var type  = query.type;
+
 	// Initialize an empty response to fill below.
-	var response = {};
+	// Note: this is basically a JSON object used as a pointer, so the helper functions below
+	// can fill in the correct query to be executed by Mongoose within this function.
+	var response = {res: null};
+
 	// Set headers correctly
     res = setHeaders(res);
 
 	switch(type){
-		// If user, do something 
-		case 'user' :
-			console.log('User database request');
-			break;
-		// If location, do something
 		case 'location' :
 			console.log('Location database request');
-			// Search the location db and find locations within
-			console.log(query.date);
-			response = Location.where('date').gt(query.date - 86400).lt(query.date + 86400);
+			// Hand the query and response object off to the Location query handler.
+			// The handler will modify the res inside the response, and then exec will execute it below.
+			queryLocation(query, response);
 			break;
-		// If tweet, do something
 		case 'tweet' :
 			console.log('Tweet database request');
-			// Search the tweet's message for the keyword from the query
-			response = Tweet.where('message').regex(query.keyword);
+			// Hand the query and response object off to the Tweet query handler.
+			// The handler will modify the res inside the response, and then exec will execute it below.
+			queryTweet(query, response);
 			break;
 		// If type not defined, error
 		default :
@@ -41,11 +46,14 @@ exports.post = function(req, res){
 
 	// Set headers and send back the requested type
 	// res = setHeaders(res);
-	if(response == {}) {
-		res.json({ message: 'Request received, type was ' + type , type: type});
+	if(response.res == null) {
+		res.json({ message: "Request contains error, type was '" + type +
+							"' and query param was '" + query.param + "'",
+				   type: type ,
+				   param: query.param});
 	}else{
 		//Execute the above mongoose query on the database
-		response.exec(function(err, obj) {
+		response.res.exec(function(err, obj) {
 	        if (err) console.log(err);
 	        res.json(obj);
 	        console.log('Response sent.');
@@ -53,8 +61,65 @@ exports.post = function(req, res){
 	}
 };
 
-exports.get = function(req, res){
-	console.log('GET request to database endpoint')
-	res = setHeaders(res);
-	res.json({ message: 'Welcome to the database endpoint!' });
-}
+
+// Helper functions for running db queries:
+
+// Takes a query and builds a response to send to the database.
+// The 'response' paramter is an empty object handed in from the parent function
+// This function adds the built query to this object, and it is executed by the parent.
+var queryLocation = function(query, response){
+	// Extract the param from the query (One of: all, daterange, radius)
+	var queryParam = query.param;
+
+	switch(queryParam) {
+		case 'all' :
+			// WARNING: this will probably crash Postman, use with caution.
+			response.res = Location.find();
+			break;
+		case 'daterange' :
+			// if dateRange, extract the range and perform 'where' query with it.
+			var lo = parseInt(query.low);  // JSON parameters are not always ints, ensure that they are.
+			var hi = parseInt(query.high);
+			response.res = Location.where('date').gt(lo).lt(hi);
+			console.log(response);
+			break;
+		case 'radius' :
+			// TODO: figure a way to produce a searchable lat/lon radius
+			break;
+		default :
+			// Search param was not specified or error occured.
+			console.log('Error, param was: ' + queryParam);
+	}
+};
+
+// Takes a query and builds a response to send to the database.
+// The 'response' paramter is an empty object handed in from the parent function
+// This function adds the built query to this object, and it is executed by the parent.
+var queryTweet = function(query, response) {
+	// Extract the param from the query (One of: all, daterange, keyword, user)
+	var queryParam = query.param
+
+	switch(queryParam) {
+		case 'all' :
+			// WARNING: this will probably crash Postman, use with caution.
+			response.res = Tweet.find();
+			break;
+		case 'daterange' :
+			// if dateRange, extract the range and perform 'where' query with it.
+			var lo = parseInt(query.low);  // JSON parameters are not always ints, ensure that they are.
+			var hi = parseInt(query.high);
+			response.res = Tweet.where('created_at').gt(lo).lt(hi);
+			break;
+		case 'keyword' :
+			// Search for the keyword in the tweets
+			response.res = Tweet.where('message').regex(query.keyword);
+			break;
+		case 'user' :
+			// Search the Tweet db for the given username.
+			response.res = Tweet.where('user').regex(query.username)
+			break;
+		default :
+			// Search param was not specified or an error occured.
+			console.log('Error, param was: ' + queryParam);
+	}
+};

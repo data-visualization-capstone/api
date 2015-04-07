@@ -25,14 +25,13 @@ DV.config = require('./config/config');
 
 // Connect to our database
 var mongoose   = require('mongoose');
-mongoose.connect(DV.config.development.connectURL); 
+mongoose.connect(DV.config.development.connectURL);
 
 // Database Models
 // TODO: these were made global to allow the routes file to see them,
 //		 either figure out if this is ok, or move these variables into
 //		 a dedicated global data file.
 
-User     = require('./app/models/user');
 Location = require('./app/models/location');
 Tweet    = require('./app/models/tweet');
 

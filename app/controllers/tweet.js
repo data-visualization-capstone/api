@@ -78,17 +78,17 @@ exports.getStream = function(req, res) {
 // hashtag to our database
 exports.createStream = function(req, res) {
     console.log('Initialize Twitter Stream. Recording incoming tweets.\n')
-    
+
     // Parameters to restrict the stream results to.
     var params = {
-        track: '#' + req.params.hash,
+        track: req.params.hash,
         // 4 mile radius around downtown Boston.
         geocode: "42.351252, -71.073808, 4mi",
     };
 
     res = setHeaders(res);
     res.json({message: "Stream created, recording tweets for: " + req.params.hash});
-    
+
     // Open a stream with 'statuses' set as the endpoint.
     twitter.stream('statuses/filter', params, function(stream){
         // If data received, do the following:
