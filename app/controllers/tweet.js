@@ -24,6 +24,7 @@ exports.getSearch = function(req, res) {
             var acc = [];
 
             console.log(tweets.statuses.length + " Tweets found for: " + req.params.hash);
+            console.log(tweets.search_metadata.next_results);
 
             // For each part of the tweet, extract the data we need.
             for (var i in tweets.statuses){
@@ -47,6 +48,22 @@ exports.getSearch = function(req, res) {
             // res.json(tweets.statuses[0].coordinates)
         }
     });
+}
+
+exports.getLargeSearch = function(req, res) {
+    console.log('Large twitter search requested.')
+
+    var params = {
+        q: req.params.hash,
+        // 4 mile radius around downtown Boston.
+        geocode: "42.351252,-71.073808,5mi",
+        count: 100,
+        lang: "en",
+        cursor: -1,
+        count: 10,
+    };
+    
+
 }
 
 // Request saved tweets from stream.

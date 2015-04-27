@@ -3,6 +3,7 @@ var mongoose     = require('mongoose');
 var locControl   = require('../controllers/location');
 var tweetControl = require('../controllers/tweet');
 var dbControl    = require('../controllers/database');
+var igControl    = require('../controllers/instagram');
 
 // New Twitter Connection
 
@@ -73,6 +74,12 @@ module.exports = function(app) {
         .post(function(req, res) {
             dbControl.post(req, res);
         });
+
+    app.route('/instagram/search')
+
+        .get(function(req, res){
+            igControl.getSearch(req, res);
+        })
 
 }
 

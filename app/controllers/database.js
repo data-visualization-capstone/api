@@ -83,9 +83,6 @@ var queryLocation = function(query, response){
 			response.res = Location.where('date').gt(lo).lt(hi);
 			console.log(response);
 			break;
-		case 'radius' :
-			// TODO: figure a way to produce a searchable lat/lon radius
-			break;
 		default :
 			// Search param was not specified or error occured.
 			console.log('Error, param was: ' + queryParam);

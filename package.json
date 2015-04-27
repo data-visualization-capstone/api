@@ -1,14 +1,14 @@
 {
-	"name": "node-api",
-	"main": "server.js",
-	"dependencies": {
-		"express": "~4.0.0",
-		"morgan": "~1.0.0",
-		"mongoose": "~3.6.13",
-		"body-parser": "~1.0.1",
-		"underscore": "1.6.0",
-		"moment": "~2.8.4",
-		"twitter" : "latest"
-
-	}
+  "name": "node-api",
+  "main": "server.js",
+  "dependencies": {
+    "express": "~4.0.0",
+    "morgan": "~1.0.0",
+    "mongoose": "~3.6.13",
+    "body-parser": "~1.0.1",
+    "underscore": "1.6.0",
+    "moment": "~2.8.4",
+    "twitter": "latest",
+    "instagram-node": "~0.5.7"
+  }
 }

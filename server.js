@@ -32,8 +32,9 @@ mongoose.connect(DV.config.development.connectURL);
 //		 either figure out if this is ok, or move these variables into
 //		 a dedicated global data file.
 
-Location = require('./app/models/location');
-Tweet    = require('./app/models/tweet');
+Location  = require('./app/models/location');
+Tweet     = require('./app/models/tweet');
+Instagram = require('./app/models/instagram');
 
 
 // Pull the routes from app/controllers/routes.js
