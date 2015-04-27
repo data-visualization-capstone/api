@@ -9,8 +9,9 @@ exports.getSearch = function(req, res) {
 
     var params = {
         q: req.params.hash,
-        // 4 mile radius around downtown Boston.
-        geocode: "42.351252,-71.073808,5mi",
+        
+        // 4 mile radius around the Prudential Center.
+        geocode: "42.347478, -71.082137,3mi",
         count: 100,
         lang: "en",
     };
