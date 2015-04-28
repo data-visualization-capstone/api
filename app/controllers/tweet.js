@@ -9,9 +9,9 @@ exports.getSearch = function(req, res) {
 
     var params = {
         q: req.params.hash,
-        
-        // 4 mile radius around the Prudential Center.
-        geocode: "42.347478, -71.082137,3mi",
+
+        // 3 mile radius around the Prudential Center.
+        geocode: "42.347478,-71.082137,3mi",
         count: 100,
         lang: "en",
     };
@@ -25,7 +25,7 @@ exports.getSearch = function(req, res) {
             var acc = [];
 
             console.log(tweets.statuses.length + " Tweets found for: " + req.params.hash);
-            console.log(tweets.search_metadata.next_results);
+            console.log(tweets.search_metadata);
 
             // For each part of the tweet, extract the data we need.
             for (var i in tweets.statuses){
@@ -43,10 +43,10 @@ exports.getSearch = function(req, res) {
                     })
                 }
             }
+
             // Display the resulting JSON object in the browser.
             res = setHeaders(res);
             res.json(acc);
-            // res.json(tweets.statuses[0].coordinates)
         }
     });
 }
@@ -56,14 +56,14 @@ exports.getLargeSearch = function(req, res) {
 
     var params = {
         q: req.params.hash,
-        // 4 mile radius around downtown Boston.
+        // 5 mile radius around downtown Boston.
         geocode: "42.351252,-71.073808,5mi",
         count: 100,
         lang: "en",
         cursor: -1,
         count: 10,
     };
-    
+
 
 }
 
@@ -76,7 +76,7 @@ exports.getStream = function(req, res) {
     var params = {
         track: '#' + req.params.hash,
         lang: "en",
-        geocode: "42.351252, -71.073808, 4mi",
+        geocode: "42.351252,-71.073808,4mi",
     };
 
     // Query the database for tweets with a message containing the searched hash.
@@ -101,7 +101,7 @@ exports.createStream = function(req, res) {
     var params = {
         track: req.params.hash,
         // 4 mile radius around downtown Boston.
-        geocode: "42.351252, -71.073808, 4mi",
+        geocode: "42.351252,-71.073808,4mi",
     };
 
     res = setHeaders(res);
