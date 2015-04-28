@@ -56,7 +56,6 @@ exports.post = function(req, res){
 		response.res.exec(function(err, obj) {
 	        if (err) console.log(err);
 	        res.json(obj);
-		console.log(obj);
 	        console.log('Response sent.');
 		});
 	}
